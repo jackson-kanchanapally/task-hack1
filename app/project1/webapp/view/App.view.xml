@@ -1,0 +1,67 @@
+<mvc:View
+   controllerName="project1.controller.App"
+   xmlns:mvc="sap.ui.core.mvc"
+   displayBlock="true"
+   xmlns="sap.m"
+   xmlns:upload="sap.m.upload"
+>
+   <App id="app">
+      <pages>
+         <Page id="page" title="{i18n>title}">
+            <VBox>
+               <Panel>
+                  <Label text="Product" labelFor="productInput" />
+                  <Input
+                     id="productInput"
+                     placeholder="Enter product"
+                     showSuggestion="true"
+                     showValueHelp="true"
+                     valueHelpRequest=".onValueHelpRequest">
+                  </Input>
+               </Panel>
+
+               <!-- Conditionally display the Files facet or UploadSet -->
+               <Panel visible="{view>/showFilesFacet}">
+                  <!-- Files facet content -->
+                  <Label text="Files" />
+                  <!-- Your Files table or other content goes here -->
+               </Panel>
+
+               <Panel visible="{= !${view>/showFilesFacet} }">
+                  <!-- UploadSet component -->
+                  <upload:UploadSet
+                     id="uploadSet"
+                     instantUpload="false"
+                     uploadEnabled="true"
+                     showIcons="true"
+                     afterItemAdded="onAfterItemAdded"
+                     uploadCompleted="onUploadCompleted"
+                     items="{ path: '/Files', parameters: { $orderby: 'createdAt desc' }, templateShareable: false }"
+                  >
+                     <upload:toolbar></upload:toolbar>
+                     <upload:items>
+                        <upload:UploadSetItem
+                           fileName="{fileName}"
+                           mediaType="{mediaType}"
+                           url="{url}"
+                           thumbnailUrl="{ path: 'mediaType', formatter: '.formatThumbnailUrl' }"
+                           enabledEdit="false"
+                           openPressed="onOpenPressed"
+                           removePressed="onRemovePressed"
+                        >
+                           <upload:attributes>
+                              <ObjectAttribute title="Uploaded By" text="{createdBy}" />
+                              <ObjectAttribute title="Uploaded on" text="{createdAt}" />
+                              <ObjectAttribute title="File Type" text="{mediaType}" />
+                              <ObjectAttribute title="File Size" text="{size}" />
+                           </upload:attributes>
+                        </upload:UploadSetItem>
+                     </upload:items>
+                  </upload:UploadSet>
+               </Panel>
+
+            </VBox>
+         </Page>
+      </pages>
+   </App>
+</mvc:View>
